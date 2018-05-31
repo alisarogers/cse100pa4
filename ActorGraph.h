@@ -9,7 +9,8 @@
 
 #ifndef ACTORGRAPH_H
 #define ACTORGRAPH_H
-
+#include <vector>
+#include <string>
 #include <iostream>
 
 // Maybe include some data structures here
@@ -18,7 +19,9 @@ using namespace std;
 
 class ActorGraph {
     protected:
-
+        vector <string> actors;
+        vector <string> movies;
+        vector <int> year;
         // Maybe add class data structure(s) here
 
     public:
@@ -35,6 +38,12 @@ class ActorGraph {
          *
          * return true if file was loaded sucessfully, false otherwise
          */
+        //returns a vector containing the actors from the loaded file
+        vector<string> getActors(void);
+        //returns a vector containing the movies from the loaded file
+        vector<string> getMovies(void);
+        //returns a vector containing the years from the loaded file
+        vector<int> getYears(void);
         bool loadFromFile(const char* in_filename, bool use_weighted_edges);
 
 };

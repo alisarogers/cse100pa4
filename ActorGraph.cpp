@@ -17,7 +17,18 @@
 using namespace std;
 
 ActorGraph::ActorGraph(void) {}
-
+vector<string> ActorGraph::getActors(void)
+{
+         return this->actors;
+}
+vector<string> ActorGraph::getMovies(void)
+{
+         return this->movies;
+}
+vector <int> ActorGraph::getYears(void)
+{
+         return this->year;
+}
 bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) {
     // Initialize the file stream
     ifstream infile(in_filename);
@@ -58,8 +69,13 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) 
         string movie_title(record[1]);
         int movie_year = stoi(record[2]);
 
+        this->actors.push_back(actor_name);
+        this->movies.push_back(movie_title);
+        this->year.push_back(movie_year);
+     
         // we have an actor/movie relationship, now what?
     }
+
 
     if (!infile.eof()) {
         cerr << "Failed to read " << in_filename << "!\n";
