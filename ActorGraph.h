@@ -15,7 +15,8 @@
 #include <iostream>
 #include <utility>
 #include <map> 
-#include "ActorEdge.h"
+//#include "Edges.h"
+
 
 using namespace std;
 
@@ -45,6 +46,7 @@ class ActorGraph {
 
         // Maybe add some more methods here
 
+	map_type createAdList (vector<movie_pair> movieYears, vector<ActorNode> actors);
         /** You can modify this method definition as you wish
          *
          * Load the graph from a tab-delimited file of actor->movie relationships.
@@ -60,7 +62,7 @@ class ActorGraph {
         vector<string> getMovies(void);
         //returns a vector containing the years from the loaded file
         vector<int> getYears(void);
-	vector <movie_pair>moviesYears;
+	vector<movie_pair> getMoviesAndYears(void);
         bool loadFromFile(const char* in_filename, bool use_weighted_edges);
 
 	vector<string> findPath (ActorNode actor1, ActorNode actor2, int& length, vector<movie_pair> movie_years, vector<ActorNode> actors);

@@ -15,6 +15,11 @@ void ActorNode::addMovies(movie_pair movie)
 	this->moviesIn.push_back(movie);
 }
 
+ActorNode::ActorNode(void) {}
 
+void ActorNode::addToPath(string str)
+{
+	this->path.push_back(str);
+}
 
 #endif

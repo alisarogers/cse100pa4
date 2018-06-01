@@ -1,11 +1,14 @@
 #include "ActorGraph.h"
-
+#include <string>
+#include <fstream>
+#include <iostream>
 using namespace std;
 
 /*  USE BFS TO FIND THE PATH
  *  use queue to track all the visited actors
  */
 
+typedef pair<string, int> movie_pair;
 
 int main (int argc, char** argv)
 {
@@ -25,18 +28,28 @@ int main (int argc, char** argv)
 	//loads years from fileinto years vector
 	vector<int> years = graph->getYears();
 
+	vector<movie_pair> movies_and_years = graph->getMoviesAndYears();
+
+		
+	
+
+
+
 	/*Because the loadFromFile method updates each of these vectors
 	a line at a time, actors.at(i), movies.at(i), and years.at(i) 
 	are all correlated/in sync.*/
 
 
-	for(i=0; i<10; i++)
+/*	for(i=0; i<10; i++)
 	{
 		//testing that vectors were populated w at least 10 items each
 		cout<< actors.at(i)<<endl;
 		cout<< movies.at(i)<<endl;
 		cout<< years.at(i)<<endl;
 
-	}
+	} */
+
+
+
 	return 1;
 }

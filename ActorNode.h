@@ -28,8 +28,13 @@ public:
 	
     ActorNode();
 
+    vector<string> path;
+
     //adds movie to moviesIn vector
     void addMovies(movie_pair movie);
+
+    void addToPath(string);
+
 };
 
 

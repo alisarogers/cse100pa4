@@ -16,17 +16,19 @@
 #include <string>
 #include <vector>
 #include "ActorGraph.h"
+#include "ActorNode.h"
 #include <queue>
 #include <utility>
+//#include "Edges.h"
 
 using namespace std;
-typedef pair<int, ActorNode> lengthActor;
+//typedef pair<int, ActorNode> lengthActor;
 typedef map<movie_pair, vector<ActorNode>> map_type;
 
 ActorGraph::ActorGraph(void) {}
 vector<string> ActorGraph::getActors(void)
-{
-         return this->actors;
+{ 
+	return this->actors;
 }
 vector<string> ActorGraph::getMovies(void)
 {
@@ -36,6 +38,12 @@ vector <int> ActorGraph::getYears(void)
 {
          return this->years;
 }
+
+vector<movie_pair> ActorGraph::getMoviesAndYears(void)
+{
+	return this->movie_years;
+}
+
 bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) {
     // Initialize the file stream
     ifstream infile(in_filename);
@@ -98,6 +106,30 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) 
     return true;
 }
 
+
+
+map_type createAdList (vector<movie_pair> movieYears, vector<ActorNode> actors) {
+		map_type AdjMap;
+		for(int i = 0; i < actors.size(); i++)
+		{
+			if(AdjMap.find(movieYears.at(i)) == AdjMap.end()){
+			//	AdjMap[movieYears.at(i)].push_back(actors.at(i));
+			vector<ActorNode> actorVector;
+			AdjMap.emplace(movieYears.at(i), actorVector);
+			} 
+	
+			// how do we make this a new vector?
+			AdjMap[movieYears.at(i)].push_back(actors.at(i));
+			
+
+	//	this->AdjMap = AdjMap;
+		return AdjMap;
+		}
+}
+
+
+
+
 vector<ActorNode> populateNodes(vector<string> actors, vector<movie_pair> movie_years) {
 	
 
@@ -127,7 +159,7 @@ vector<ActorNode> populateNodes(vector<string> actors, vector<movie_pair> movie_
 		{
 			if (actors.at(k) == condensedActors.at(l).name) 
 			{
-				condensedActors.at(l).addMovies(movie_years.at(k));
+				condensedActors.at(l).moviesIn.push_back(movie_years.at(k));
 			} 
 		}
 	}
@@ -152,16 +184,18 @@ vector<string> findPath (ActorNode actor1, ActorNode actor2, int& length, vector
 	*/
 
 	ActorNode currActor = actor1;
-	lengthActor currCheck = make_pair(0, currActor);
-	queue<lengthActor> actorQueue;
+	pair<int, ActorNode> currCheck (0, currActor);
+	queue<pair<int, ActorNode>> actorQueue;
 	actorQueue.push(currCheck);	
 	vector<string> foundPath;
-	Edges costarEdges;
-	map_type costarMap = costarEdges.createAdList(movie_years, populateNodes(actors, movie_years));
+
+	vector<ActorNode> actorVector = populateNodes(actors, movie_years);
+	/** something weird is happening here, undefined reference*/
+	map_type costarMap = createAdList(movie_years, actorVector);
 	vector<ActorNode> costars;
 	
 	vector<movie_pair> tempMovies;
-	lengthActor tempPair;
+	pair<int, ActorNode> tempPair;
 
 	/* queue is FIFO*/
 	while(!actorQueue.empty()) {
@@ -169,16 +203,21 @@ vector<string> findPath (ActorNode actor1, ActorNode actor2, int& length, vector
 		actorQueue.pop();
 		if(currCheck.second.name == actor2.name) {
 			length = currCheck.first;
+			foundPath = currCheck.second.path;
 			return foundPath;
 		} else {
 			for(int m = 0; m < currCheck.second.moviesIn.size(); m++)
 			{
+				// this inserts all of the current actor's costars from 
+				// every one of their movies into the queue
 				tempMovies = currCheck.second.moviesIn;
 				movie_pair tempMov = tempMovies[m];
-				costars = costarMap[tempMov];
+				costars = costarMap[tempMov];	
 				for(int n = 0; n < costars.size(); n++) 
 				{
 					tempPair = make_pair((currCheck.first + 1), costars.at(n));
+					tempPair.second.addToPath(tempMov.first);
+					tempPair.second.addToPath(currCheck.second.name);
 					actorQueue.push(tempPair);		
 				}
 			}
