@@ -9,19 +9,35 @@
 
 #ifndef ACTORGRAPH_H
 #define ACTORGRAPH_H
+#include "ActorNode.h"
 #include <vector>
 #include <string>
 #include <iostream>
+#include <utility>
+#include <map> 
+#include "ActorEdge.h"
+
+using namespace std;
+
+typedef pair<string, int> movie_pair;
+
+typedef map<movie_pair, vector<ActorNode>> map_type;
 
 // Maybe include some data structures here
 
-using namespace std;
 
 class ActorGraph {
     protected:
         vector <string> actors;
-        vector <string> movies;
-        vector <int> year;
+	vector <string> movies;
+	vector <int> years;
+	
+	vector<movie_pair> movie_years;
+
+	vector <ActorNode> actorNodes;
+	
+	map_type costarMap;
+
         // Maybe add class data structure(s) here
 
     public:
@@ -44,7 +60,14 @@ class ActorGraph {
         vector<string> getMovies(void);
         //returns a vector containing the years from the loaded file
         vector<int> getYears(void);
+	vector <movie_pair>moviesYears;
         bool loadFromFile(const char* in_filename, bool use_weighted_edges);
+
+	vector<string> findPath (ActorNode actor1, ActorNode actor2, int& length, vector<movie_pair> movie_years, vector<ActorNode> actors);
+	
+	vector<ActorNode> populateNodes (vector<string> actors, vector<movie_pair> movie_years);
+
+	map_type createCostarMap(vector<string> actors); 
 
 };
 

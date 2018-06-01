@@ -5,6 +5,9 @@
  *
  * This file is meant to exist as a container for starter code that you can use to read the input file format
  * defined in movie_casts.tsv. Feel free to modify any/all aspects as you wish.
+
+	*** need to add a map as a protected  variable ** 
+
  */
 
 #include <fstream>
@@ -13,8 +16,12 @@
 #include <string>
 #include <vector>
 #include "ActorGraph.h"
+#include <queue>
+#include <utility>
 
 using namespace std;
+typedef pair<int, ActorNode> lengthActor;
+typedef map<movie_pair, vector<ActorNode>> map_type;
 
 ActorGraph::ActorGraph(void) {}
 vector<string> ActorGraph::getActors(void)
@@ -27,7 +34,7 @@ vector<string> ActorGraph::getMovies(void)
 }
 vector <int> ActorGraph::getYears(void)
 {
-         return this->year;
+         return this->years;
 }
 bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) {
     // Initialize the file stream
@@ -71,8 +78,13 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) 
 
         this->actors.push_back(actor_name);
         this->movies.push_back(movie_title);
-        this->year.push_back(movie_year);
-     
+        this->years.push_back(movie_year);
+	movie_pair movieYear = make_pair(movie_title, movie_year);
+	this->movie_years.push_back(movieYear); 
+   	
+	/* could initialize a pair each time and then push it onto 
+	 * movieYears */
+	 
         // we have an actor/movie relationship, now what?
     }
 
@@ -84,4 +96,105 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) 
     infile.close();
 
     return true;
+}
+
+vector<ActorNode> populateNodes(vector<string> actors, vector<movie_pair> movie_years) {
+	
+
+	vector<ActorNode> condensedActors;
+	bool existsAlready;
+	
+	//creates a vector of ActorNodes, with each actor only once
+	for(int i = 0; i < actors.size(); i++) {
+		existsAlready = false;
+		for(int j = 0; j < condensedActors.size(); j++) {
+			if(condensedActors.at(j).name == actors.at(i))
+			{
+				existsAlready = true;
+				break;
+			}
+		}
+		if(!existsAlready) 
+		{
+			ActorNode newActor = ActorNode(actors.at(i));
+			condensedActors.push_back(newActor);
+		}
+	}	
+	
+	//adds the movies to the actor Nodes
+	for (int k = 0; k < movie_years.size(); k++) {
+		for(int l = 0; l < condensedActors.size(); l++) 
+		{
+			if (actors.at(k) == condensedActors.at(l).name) 
+			{
+				condensedActors.at(l).addMovies(movie_years.at(k));
+			} 
+		}
+	}
+
+
+}
+
+
+vector<string> findPath (ActorNode actor1, ActorNode actor2, int& length, vector<movie_pair> movie_years, vector<string> actors) {
+
+	/* q = an empty queue
+ 		add (0,u) to q // (0, u) -> (length from u, current vertext)
+	while q is not empty:
+		(length, curr) = q.dequeue();
+		if curr == v: // we found the one we're searching for
+			return lenth
+		for all outgoing edges (curr, wv) from curr: // otherwise explore all neighbors
+			if w has not yet been visitied
+				add (length + 1, w) to q
+	return FAIL // if we reach here, it failed
+	path exists from u to v
+	*/
+
+	ActorNode currActor = actor1;
+	lengthActor currCheck = make_pair(0, currActor);
+	queue<lengthActor> actorQueue;
+	actorQueue.push(currCheck);	
+	vector<string> foundPath;
+	Edges costarEdges;
+	map_type costarMap = costarEdges.createAdList(movie_years, populateNodes(actors, movie_years));
+	vector<ActorNode> costars;
+	
+	vector<movie_pair> tempMovies;
+	lengthActor tempPair;
+
+	/* queue is FIFO*/
+	while(!actorQueue.empty()) {
+		currCheck = actorQueue.front();
+		actorQueue.pop();
+		if(currCheck.second.name == actor2.name) {
+			length = currCheck.first;
+			return foundPath;
+		} else {
+			for(int m = 0; m < currCheck.second.moviesIn.size(); m++)
+			{
+				tempMovies = currCheck.second.moviesIn;
+				movie_pair tempMov = tempMovies[m];
+				costars = costarMap[tempMov];
+				for(int n = 0; n < costars.size(); n++) 
+				{
+					tempPair = make_pair((currCheck.first + 1), costars.at(n));
+					actorQueue.push(tempPair);		
+				}
+			}
+		}
+		// use edges 
+		// edges should return the actors with adjacency 1
+		// we'll add these actors to the queue
+		// continue through the queue until we find actor2
+		// 
+
+		// go to this actor's movies, use the AdjMap to return 		      // the list of people in each of their movies (all of their movies)		
+		// helper method to compile all of their actors vectors
+
+
+
+	}
+
+
 }

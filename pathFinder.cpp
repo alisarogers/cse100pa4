@@ -2,6 +2,11 @@
 
 using namespace std;
 
+/*  USE BFS TO FIND THE PATH
+ *  use queue to track all the visited actors
+ */
+
+
 int main (int argc, char** argv)
 {
 	//creates new ActorGraph pointer

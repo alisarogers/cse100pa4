@@ -7,6 +7,7 @@
 
 using namespace std;
 
+typedef pair<string, int> movie_pair;
  
 class ActorNode {
 
@@ -16,7 +17,7 @@ public:
     string name;
 
     //holds running list of movies the Actor was in
-    vector <string> moviesIn;
+    vector <movie_pair> moviesIn;
 
     //initializes ActorNode with a name
     ActorNode(string actorName)
@@ -24,8 +25,11 @@ public:
       this->name = actorName;
     }
 
+	
+    ActorNode();
+
     //adds movie to moviesIn vector
-    void addMovies(string movie);
+    void addMovies(movie_pair movie);
 };
 
 

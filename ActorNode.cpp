@@ -10,9 +10,11 @@
 
 using namespace std;
 
-void ActorNode::addMovies(string movie)
+void ActorNode::addMovies(movie_pair movie)
 {
 	this->moviesIn.push_back(movie);
 }
+
+
 
 #endif
