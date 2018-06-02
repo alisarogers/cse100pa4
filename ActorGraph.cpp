@@ -108,7 +108,7 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) 
 
 
 
-map_type createAdList (vector<movie_pair> movieYears, vector<ActorNode> actors) {
+map_type ActorGraph::createAdList (vector<movie_pair> movieYears, vector<ActorNode> actors) {
 		map_type AdjMap;
 		for(int i = 0; i < actors.size(); i++)
 		{
@@ -130,7 +130,7 @@ map_type createAdList (vector<movie_pair> movieYears, vector<ActorNode> actors) 
 
 
 
-vector<ActorNode> populateNodes(vector<string> actors, vector<movie_pair> movie_years) {
+vector<ActorNode> ActorGraph::populateNodes(vector<string> actors, vector<movie_pair> movie_years) {
 	
 
 	vector<ActorNode> condensedActors;
@@ -168,7 +168,17 @@ vector<ActorNode> populateNodes(vector<string> actors, vector<movie_pair> movie_
 }
 
 
-vector<string> findPath (ActorNode actor1, ActorNode actor2, int& length, vector<movie_pair> movie_years, vector<string> actors) {
+void ActorGraph::clearActorPaths(vector<ActorNode> actorVector) 
+{
+	for(int i = 0; i < actorVector.size(); i++)
+	{
+		actorVector[i].path.clear();
+	}
+
+}
+
+
+vector<string> ActorGraph::findPath (ActorNode actor1, ActorNode actor2, int& length, vector<movie_pair> movie_years, vector<ActorNode> actorVector) {
 
 	/* q = an empty queue
  		add (0,u) to q // (0, u) -> (length from u, current vertext)
@@ -183,14 +193,19 @@ vector<string> findPath (ActorNode actor1, ActorNode actor2, int& length, vector
 	path exists from u to v
 	*/
 
+	/* sets all the paths back to null for all the actors*/
+	clearActorPaths(actorVector);
 	ActorNode currActor = actor1;
 	pair<int, ActorNode> currCheck (0, currActor);
+
+	/* creates  queue of ActorNodes + length of their path
+	 * and pushes actor1 onto it 
+         */		
 	queue<pair<int, ActorNode>> actorQueue;
 	actorQueue.push(currCheck);	
 	vector<string> foundPath;
 
-	vector<ActorNode> actorVector = populateNodes(actors, movie_years);
-	/** something weird is happening here, undefined reference*/
+	/* creates the map */
 	map_type costarMap = createAdList(movie_years, actorVector);
 	vector<ActorNode> costars;
 	
@@ -218,6 +233,9 @@ vector<string> findPath (ActorNode actor1, ActorNode actor2, int& length, vector
 					tempPair = make_pair((currCheck.first + 1), costars.at(n));
 					tempPair.second.addToPath(tempMov.first);
 					tempPair.second.addToPath(currCheck.second.name);
+					string temp = "";
+					temp += currCheck.first; 
+					tempPair.second.addToPath(temp);
 					actorQueue.push(tempPair);		
 				}
 			}
@@ -232,6 +250,7 @@ vector<string> findPath (ActorNode actor1, ActorNode actor2, int& length, vector
 		// helper method to compile all of their actors vectors
 
 
+	return foundPath;
 
 	}
 

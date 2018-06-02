@@ -28,7 +28,7 @@ actorconnections: ActorGraph.o
 
 # Note: you do not have to include a *.cpp file if it aleady has a paired *.h file that is already included with class/method headers
 # took out UnionFind.hpp
-ActorGraph.o: UnionFind.hpp Movie.h ActorNode.h ActorGraph.h ActorGraph.cpp
+ActorGraph.o: UnionFind.hpp Movie.h ActorNode.h ActorGraph.h ActorGraph.cpp ActorNode.cpp
 
 
 clean:

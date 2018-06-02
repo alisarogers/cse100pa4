@@ -69,6 +69,8 @@ class ActorGraph {
 	
 	vector<ActorNode> populateNodes (vector<string> actors, vector<movie_pair> movie_years);
 
+	void clearActorPaths (vector<ActorNode> actorVector);	
+
 	map_type createCostarMap(vector<string> actors); 
 
 };

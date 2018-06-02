@@ -4,8 +4,6 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
-#include <sstream>
-
 using namespace std;
 
 /*  USE BFS TO FIND THE PATH
@@ -58,37 +56,19 @@ int main (int argc, char** argv)
 			continue;
 		}
 
-		actor1s.push_back(record[0]);
-		actor2s.push_back(record[1]);
+		actor1s->push_back(record[0]);
+		actor2s->push_back(record[1]);
 
 	}
 
 	if(!infile.eof()) {
-		cerr << "Failed to read " << argv[3] << "!\n";
+		cerr << "Failed to read " << in_filename << "!\n";
 		
 	}
 	infile.close();
 
-	int pathLen = 0;
-
-	// open the out text file
-	ofstream toWrite;
-	toWrite.open(argv[4]);
-
-	// write to the out file
 	for (int i = 0; i < actor1s.size(); i++) {
-		if(toWrite.is_open()) {
-		string str; 
-		
-		
-		vector<string> thePath = graph->findPath(actor1s[i], actor2s[i], pathLen, movies_and_years, actorVector);
-
-			for (int j = 0; j < thePath.size(); j = j + 3) 
-			{
-				str.append("(" + thePath[j] + ")" + "--" + "[" + thePath[j+1] + "#@" + thePath[j+2] + "]" + "-->");
-				toWrite << str << "\n";
-			}
-		}
+		cout << graph->findPath(actor1s[i], actor2s[i], 0, movies_and_years, actorVector) << endl;
 	}
 
 
