@@ -21,10 +21,12 @@ private:
 	vector<ActorNode*> cast;
 
 public:
+	MovieNode();
 	MovieNode(string movie, int yr);
 	void setActorBefore(ActorNode* before);
 	void setActorAfter(ActorNode* after);
 	void addToCast (ActorNode* addActor);
 	vector<ActorNode*> getCast();
+};
 
 #endif //MOVIENODE_H

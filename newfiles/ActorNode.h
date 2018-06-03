@@ -11,6 +11,8 @@
 #include "MovieNode.h"
 using namespace std;
 
+class MovieNode;
+
 class ActorNode {
 
 private:
@@ -25,5 +27,5 @@ public:
 	void setMovieAfter(MovieNode* after);
 	void addToMovies (MovieNode* addMovie);
 	vector<MovieNode*> getStarredIn();
-
+};
 #endif //ACTORNODE_H

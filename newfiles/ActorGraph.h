@@ -38,4 +38,6 @@ public:
 	ActorNode* printPath(ActorNode* firstActor);
 	vector<ActorNode*> populateActorNodes(vector<string> actors, vector<string> movies, vector<int> years);
 
+};
+
 #endif //ACTORGRAPH_H

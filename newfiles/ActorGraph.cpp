@@ -9,25 +9,18 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <utility>
 #include <unordered_map>
 #include "MovieNode.h"
 #include "ActorNode.h"
+#include "ActorGraph.h"
 
 using namespace std;
 
 
-class ActorGraph {
 
-private:
-	vector<string> actors;
-	vector<string> movies;
-	vector<int> years;
-	
-	vector<ActorNode*> actorNodes;
-	vector<MovieNode*> movieNodes;
-	
-public:
 	vector<string> ActorGraph::getActors()
 	{
 		return this->actors;
@@ -108,8 +101,17 @@ public:
 	}
 
 
-	ActorNode* ActorGraph::createShortestPath(ActorNode* finalActor);
-	ActorNode* ActorGraph::printPath(ActorNode* firstActor);
-	vector<ActorNode*> ActorGraph::populateActorNodes(vector<string> actors, vector<string> movies, vector<int> years);
+	ActorNode* ActorGraph::createShortestPath(ActorNode* finalActor) {
+
+}
+	ActorNode* ActorGraph::printPath(ActorNode* firstActor) 
+	{
+	
+
+	}
+
+	vector<ActorNode*> ActorGraph::populateActorNodes(vector<string> actors, vector<string> movies, vector<int> years) {
+
+}
 
 #endif //ACTORGRAPH_H
