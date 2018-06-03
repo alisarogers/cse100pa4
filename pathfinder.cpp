@@ -91,7 +91,7 @@ int main (int argc, char** argv)
 		}
 	}
 
-
+	toWrite.close();
 	//read in args from test_pairs (arg[3] i think)
 	//call find Path
 
