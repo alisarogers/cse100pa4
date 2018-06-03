@@ -11,17 +11,16 @@
 #include "MovieNode.h"
 using namespace std;
 
+
 class MovieNode;
 
 class ActorNode {
-
-private:
+public:
 	string name;
 	MovieNode* movieBefore;
 	MovieNode* movieAfter;
 	vector<MovieNode*> starredIn;
 
-public:
 	ActorNode(string actor);
 	void setMovieBefore(MovieNode* before);
 	void setMovieAfter(MovieNode* after);

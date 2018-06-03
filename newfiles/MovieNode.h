@@ -10,19 +10,19 @@
 #include <vector>
 #include "ActorNode.h"
 using namespace std;
+class ActorNode;
 
 class MovieNode {
-
-private:
+public:
 	string name;
+	string movieAndYear;
 	int year;
 	ActorNode* actorBefore;
 	ActorNode* actorAfter;
-	vector<ActorNode*> cast;
+	vector<ActorNode*> castMembers;
 
-public:
 	MovieNode();
-	MovieNode(string movie, int yr);
+	MovieNode* MovieNode(string movie, int yr);
 	void setActorBefore(ActorNode* before);
 	void setActorAfter(ActorNode* after);
 	void addToCast (ActorNode* addActor);

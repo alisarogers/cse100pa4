@@ -3,8 +3,8 @@
  * Date: 6/2/2018
  *
 */
-#ifndef MOVIENODE_H
-#define MOVIENODE_H
+#ifndef MOVIENODE_CPP
+#define MOVIENODE_CPP
 
 #include <string>
 #include <vector>
@@ -14,12 +14,14 @@
 using namespace std;
 
 
-	MovieNode::MovieNode(string movie, int yr)
+	MovieNode* MovieNode::MovieNode(string movie, int yr)
 	{
 		this->name = movie;
 		this->year = yr;
+		this->movieAndYear = movie + "#@" + to_string(yr);
 		// do we need to initialize actorBefore/actorAfter/cast?
-	}
+		return this;
+	}	
 	void MovieNode::setActorBefore(ActorNode* before){
 		this->actorBefore = before;
 	}
@@ -38,4 +40,4 @@ using namespace std;
 		return this->cast;
 	}
 
-#endif //MOVIENODE_H
+#endif //MOVIENODE_CPP

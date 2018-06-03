@@ -16,44 +16,46 @@
 #include "MovieNode.h"
 #include "ActorNode.h"
 #include "ActorGraph.h"
+#include <queue>
 
 using namespace std;
 
 
 
-	vector<string> ActorGraph::getActors()
-	{
-		return this->actors;
-	}
-	vector<string> ActorGraph::getMovies()
-	{
-		return this->movies;
-	}
+vector<string> ActorGraph::getActors()
+{
+	return this->actors;
+}
 
-	vector<int> ActorGraph::getYears()
-	{
-		return this->years;
-	}
+vector<string> ActorGraph::getMovies()
+{
+	return this->movies;
+}
 
-	bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges)
-	{
+vector<int> ActorGraph::getYears()
+{
+	return this->years;
+}
+
+bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges)
+{
 		
-   		// Initialize the file stream
-		ifstream infile(in_filename);
+   	// Initialize the file stream
+	ifstream infile(in_filename);
 
-		bool have_header = false;
+	bool have_header = false;
 
- 		// keep reading lines until the end of file is reached
-		while (infile) {
+ 	// keep reading lines until the end of file is reached
+	while (infile) {
         	string s;
 
         	// get the next line
        		if (!getline( infile, s )) break;
 
         	if (!have_header) {
-      		// skip the header
-           	have_header = true;
-            	continue;
+      			// skip the header
+      		     	have_header = true;
+       		     	continue;
         	}
 
       		istringstream ss( s );
@@ -93,25 +95,157 @@ using namespace std;
 	
 	return true;
 
+}
+	
+ActorNode* ActorGraph::findPath(string actor1, string actor2, vector<ActorNode*> actorVector)
+{
+	queue<ActorNode*> actorQueue;
+	ActorNode* actor1Node;
+	ActorNode* actor2Node;
+	
+	/* find actor 1 and actor 2 nodes */
+	for(int i = 0; i < actorVector.size(); i++) 
+	{
+		if(actorVector[i]->name == actor1)
+		{
+			actor1Node = actorVector[i];
+		}
+		
+		if(actorVector[i]->name == actor2)
+		{
+			actor2Node = actorVector[i];
+		}
+	}
+
+	actorQueue.push(actor1Node);
+	ActorNode* currActor;
+//	vector<MovieNode*> movieVector;
+	vector<ActorNode*> costarsVector;
+
+	while(!actorQueue.empty())
+	{
+		currActor = actorQueue.front();		
+		actorQueue.pop();
+		if(currActor->name == actor2Node->name) {
+			return currActor;
+		} else
+		{
+			for(int m = 0; m < currActor->starredIn.size(); m++) 
+			{
+				currActor->starredIn[m]->actorBefore = currActor;
+				costarsVector = currActor->starredIn[m]->castMembers;
+				for (int n = 0; n < costarsVector.size(); n++)
+				{
+					costarsVector[n]->movieBefore = currActor->starredIn[m];
+					actorQueue.push(costarsVector[n]);
+				}
+			}
+		}
 	}
 	
-	ActorNode* ActorGraph::findPath(string actor1, string actor2, vector<MovieNode*> movies, vector<ActorNode> actorVector, unordered_map<MovieNode*, vector<ActorNode*>> movieMap)
-	{
+}
 
+
+ActorNode* ActorGraph::createShortestPath(ActorNode* actor2, string actor1)
+{
+	ActorNode* currActor = actor2;
+	currActor->movieBefore->actorAfter = currActor;
+	currActor->movieBefore->actorBefore->movieAfter = currActor->movieBefore;
+	while(currActor->movieBefore->actorBefore->name != actor1)
+	{
+		currActor = currActor->movieBefore->actorBefore;
+		currActor->movieBefore->actorAfter = currActor;
+			
+		currActor->movieBefore->actorBefore->movieAfter = currActor->movieBefore;
 	}
 
+	return currActor->movieBefore->actorBefore;
+}
 
-	ActorNode* ActorGraph::createShortestPath(ActorNode* finalActor) {
+string ActorGraph::printPath(ActorNode* firstActor, string actor2) 
+{
+	string toReturn;
+	ActorNode* currActor = firstActor;
+	while(currActor->name != actor2) 
+	{
+		toReturn.append("(" + currActor->name + ")--");
+		toReturn.append("[" + currActor->movieAfter->movieAndYear + "]-->");
+		currActor = currActor->movieAfter->actorAfter;
+	}		
+	toReturn += actor2;
+	return toReturn;
 
 }
-	ActorNode* ActorGraph::printPath(ActorNode* firstActor) 
+
+void ActorGraph::populateNodes(vector<string> actors, vector<string> movies, vector<int> years) 
+{
+	vector<ActorNode*> condensedActors;
+	bool existsAlready;
+	for(int i = 0; i < actors.size(); i++) 
 	{
+		existsAlready = false;
+		for(int j = 0; j < condensedActors.size(); j++)	
+		{
+			if(condensedActors[j]->name == actors[i])
+			{
+				existsAlready = true;
+				break;
+			}
+		}
+
+		if(!existsAlready)
+		{
+			ActorNode* newActor = new ActorNode(actors[i]);
+			condensedActors.push_back(newActor);
+		}
+	}
 	
+	vector<MovieNode*> condensedMovies;
+	MovieNode* newMovie;
+	for(int i = 0; i < movies.size(); i++) 
+	{
+		existsAlready = false;
+		for(int j = 0; j < condensedMovies.size(); j++)	
+		{
+			if((condensedMovies[j]->name == movies[i]) && (condensedMovies[j]->year == years[i]))
+			{
+				existsAlready = true;
+				break;
+			}
+		}
+
+		if(!existsAlready)
+		{
+			newMovie = MovieNode(movies[i], years[i]);
+			condensedMovies.push_back(newMovie);
+		}
+	}
+
+	for (int i = 0; i < actors.size(); i++)
+	{
+		// find the actor in the actor vector
+		// add in movies[i] to the actos' starredIn
+		// find the movie in the movie vector
+		// add actors[i] to the movies' castMembers
+		for(int j = 0; j < condensedActors.size(); j++)
+		{
+			if (condensedActors[j]->name == actors[i])
+			{
+				for(int k = 0; k < condensedMovies.size(); k ++)
+				{
+					if (condensedMovies[k]->name == movies[i])
+					{
+						condensedActors[j]->starredIn.push_back(condensedMovies[k]);
+						condensedMovies[k]->castMembers.push_back(condensedActors[j]);
+					}
+				}
+			}
+		}
 
 	}
 
-	vector<ActorNode*> ActorGraph::populateActorNodes(vector<string> actors, vector<string> movies, vector<int> years) {
-
+	this->actorNodes = condensedActors;
+	this->movieNodes = condensedMovies;		
 }
 
 #endif //ACTORGRAPH_H
