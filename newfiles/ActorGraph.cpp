@@ -201,7 +201,7 @@ void ActorGraph::populateNodes(vector<string> actors, vector<string> movies, vec
 	}
 	
 	vector<MovieNode*> condensedMovies;
-	MovieNode* newMovie;
+	MovieNode * newMovie;
 	for(int i = 0; i < movies.size(); i++) 
 	{
 		existsAlready = false;

@@ -22,7 +22,7 @@ public:
 	vector<ActorNode*> castMembers;
 
 	MovieNode();
-	MovieNode* MovieNode(string movie, int yr);
+	MovieNode(string movie, int yr);
 	void setActorBefore(ActorNode* before);
 	void setActorAfter(ActorNode* after);
 	void addToCast (ActorNode* addActor);

@@ -14,13 +14,12 @@
 using namespace std;
 
 
-	MovieNode* MovieNode::MovieNode(string movie, int yr)
+	MovieNode::MovieNode(string movie, int yr)
 	{
-		this->name = movie;
-		this->year = yr;
-		this->movieAndYear = movie + "#@" + to_string(yr);
+		name = movie;
+		year = yr;
+		movieAndYear = movie + "#@" + to_string(yr);
 		// do we need to initialize actorBefore/actorAfter/cast?
-		return this;
 	}	
 	void MovieNode::setActorBefore(ActorNode* before){
 		this->actorBefore = before;
