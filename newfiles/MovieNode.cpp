@@ -31,12 +31,12 @@ using namespace std;
 	
 	void MovieNode::addToCast (ActorNode* addActor)
 	{
-		this->cast.push_back(addActor);
+		this->castMembers.push_back(addActor);
 	}
 
 	vector<ActorNode*> MovieNode::getCast()
 	{
-		return this->cast;
+		return this->castMembers;
 	}
 
 #endif //MOVIENODE_CPP
