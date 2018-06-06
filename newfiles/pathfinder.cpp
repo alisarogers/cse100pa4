@@ -39,20 +39,32 @@ int main (int argc, char** argv)
 	vector<string> actor2s;
 	/* read in the pairs */
 	ifstream infile(argv[3]);
+	bool have_header = false;	
 	while (infile) {
+		
+		/*this chunk gets one line at a time */
 		string s;
 		if (!getline(infile, s)) { break; }
-
+	
+		if (!have_header) {
+			have_header = true;
+			continue;
+		}
+	
 		istringstream ss ( s );
 		vector <string> record;
 		
+		/* separate the line by tabs */
 		while (ss) {
 			string next;
+			/* if the part we're reading is a tab, skip it*/
 			if (!getline( ss, next, '\t' )) { break; }
+
+			/* only record non tab items*/
 			record.push_back(next);		
 		}
 	
-		if(record.size() != 3) {
+		if(record.size() != 2) {
 			continue;
 		}
 

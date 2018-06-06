@@ -126,7 +126,7 @@ ActorNode* ActorGraph::findPath(string actor1, string actor2, vector<ActorNode*>
 	{
 		currActor = actorQueue.front();		
 		actorQueue.pop();
-		if(currActor->name == actor2Node->name) {
+		if(currActor->name == actor2) {
 			return currActor;
 		} else
 		{
@@ -173,6 +173,7 @@ void ActorGraph::populateNodes(vector<string> actors, vector<string> movies, vec
 			{
 				movieAndYear = movies[i] + "#@" + to_string(years[i]);
 				map[movieAndYear].push_back(condensedActors[j]);
+				condensedActors[j]->starredIn.push_back(movieAndYear);
 				existsAlready = true;
 				break;
 			}
@@ -184,6 +185,7 @@ void ActorGraph::populateNodes(vector<string> actors, vector<string> movies, vec
 			condensedActors.push_back(newActor);
 			movieAndYear = movies[i] + "#@" + to_string(years[i]);
 			map[movieAndYear].push_back(newActor);
+			newActor->starredIn.push_back(movieAndYear);
 		}
 	}
 
