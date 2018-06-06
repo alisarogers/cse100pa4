@@ -19,7 +19,7 @@ all: pathfinder actorconnections
 
 # include what ever source code *.h files pathfinder relies on (these are merely the ones that were used in the solution)
 
-pathfinder: ActorGraph.o ActorNode.h ActorNode.cpp
+pathfinder: ActorGraph.o MovieNode.o ActorNode.o
 
 # for final submission
 
@@ -29,8 +29,12 @@ actorconnections: ActorGraph.o
 
 # Note: you do not have to include a *.cpp file if it aleady has a paired *.h file that is already included with class/method headers
 # took out UnionFind.hpp
-ActorGraph.o: MovieNode.h ActorNode.h ActorGraph.h  
+ActorGraph.o: ActorGraph.h 
+
+MovieNode.o: MovieNode.h
+
+ActorNode.o: ActorNode.h
 
 
 clean:
-		rm -f pathfinder *.o core*
+	rm -f pathfinder *.o core*

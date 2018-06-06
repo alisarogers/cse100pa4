@@ -20,12 +20,14 @@ public:
     string name;
     MovieNode* movieBefore;
     MovieNode* movieAfter;
-    vector<MovieNode*> starredIn;
+    vector<string> starredIn;
+
+	string path;
 
     ActorNode(string actor);
     void setMovieBefore(MovieNode* before);
     void setMovieAfter(MovieNode* after);
-    void addToMovies (MovieNode* addMovie);
-    vector<MovieNode*> getStarredIn();
+    void addToMovies (string addMovie);
+    vector<string> getStarredIn();
 };
 #endif //ACTORNODE_H

@@ -80,8 +80,7 @@ int main (int argc, char** argv)
 	for(int i = 0; i < actor1s.size(); i++) 
 	{
 		actor2Node = graph->findPath(actor1s[i], actor2s[i], graph->actorNodes);
-		actor1Node = graph->createShortestPath(actor2Node, actor1s[i]);
-		print = graph->printPath(actor1Node, actor2s[i]);
+		print = graph->printPath(actor2Node, actor1s[i]);
 		toWrite << print << endl;
 	}	
 	toWrite.close();

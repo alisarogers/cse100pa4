@@ -28,12 +28,12 @@ using namespace std;
 		this->movieAfter = after;
 	}
 
-	void ActorNode::addToMovies (MovieNode* addMovie)
+	void ActorNode::addToMovies (string addMovie)
 	{
 		this->starredIn.push_back(addMovie);
 	}
 
-	vector<MovieNode*> ActorNode::getStarredIn()
+	vector<string> ActorNode::getStarredIn()
 	{
 		return this->starredIn;
 	}

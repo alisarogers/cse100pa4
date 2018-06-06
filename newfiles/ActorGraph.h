@@ -23,7 +23,8 @@ public:
     vector<string> actors;
     vector<string> movies;
     vector<int> years;
-    
+
+    unordered_map<string, vector<ActorNode*>> map;   
     vector<ActorNode*> actorNodes;
     vector<MovieNode*> movieNodes;
     
