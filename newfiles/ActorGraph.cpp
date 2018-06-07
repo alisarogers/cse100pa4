@@ -17,6 +17,7 @@
 #include "ActorNode.h"
 #include "ActorGraph.h"
 #include <queue>
+#include <algorithm>
 
 using namespace std;
 
@@ -102,6 +103,11 @@ ActorNode* ActorGraph::findPath(string actor1, string actor2, vector<ActorNode*>
 	queue<ActorNode*> actorQueue;
 	ActorNode* actor1Node;
 	ActorNode* actor2Node;
+
+	for(int i = 0; i < actorVector.size(); i++)
+	{
+		actorVector[i]->path = "";
+	}
 	
 	/* find actor 1 and actor 2 nodes */
 	for(int i = 0; i < actorVector.size(); i++) 
@@ -121,22 +127,64 @@ ActorNode* ActorGraph::findPath(string actor1, string actor2, vector<ActorNode*>
 	ActorNode* currActor;
 //	vector<MovieNode*> movieVector;
 	vector<ActorNode*> costarsVector;
+	string tempStr;
+	vector<string> visitedMovies;
+	vector<string> visitedActors;
 
+	visitedActors.push_back(actor1Node->name);
 	while(!actorQueue.empty())
 	{
 		currActor = actorQueue.front();		
 		actorQueue.pop();
+
+		/* if we found the one we're looking for*/
 		if(currActor->name == actor2) {
 			return currActor;
-		} else
+		} 
+		else
 		{
+			/* iterate through the current Actor's movies and check to see if actor2 is in any of them*/
 			for(int m = 0; m < currActor->starredIn.size(); m++) 
-			{
+			{	
+
+				/* if we've already visited this movie */
+				if(!visitedMovies.empty()) {
+					if(find(visitedMovies.begin(), visitedMovies.end(), currActor->starredIn[m]) != visitedMovies.end()) 
+					{ continue; }
+				}
+
+				/* uses the map to get the actors who starred in the movie */
 				costarsVector = map[currActor->starredIn[m]];
+
+				/* add current move to the visited list so we don't look there again */
+				visitedMovies.push_back(currActor->starredIn[m]);
+
+				/* if we found the actor we're looking for in this movie's stars */
+				if(find(costarsVector.begin(), costarsVector.end(), actor2Node) != costarsVector.end())
+				{
+					actor2Node = *(find(costarsVector.begin(), costarsVector.end(), actor2Node));
+					actor2Node->path = "--[" + currActor->starredIn[m] + "]-->(" + actor2 + ")";
+					actor2Node->actorPath.push_back(currActor);
+					return actor2Node;
+				}
+				else {
+				/* add the costars to the queue so we can visit their costars*/
 				for (int n = 0; n < costarsVector.size(); n++)
 				{
-					costarsVector[n]->path = "--[" + currActor->starredIn[m] + "]-->(" + costarsVector[n]->name + ")";
+					/* if we already visited this actor, we skip this iteration */
+					if(!visitedActors.empty()) {
+						if (find(visitedActors.begin(), visitedActors.end(), costarsVector[n]->name) != visitedActors.end())
+						{ continue; } 
+					}
+
+					/* make sure we aren't pushing someone onto their own path */
+					if(costarsVector[n] != currActor) {
+						costarsVector[n]->actorPath.push_back(currActor);
+						costarsVector[n]->path = "--[" + currActor->starredIn[m] + "]-->(" + costarsVector[n]->name + ")";
+					}
+					visitedActors.push_back(costarsVector[n]->name);
 					actorQueue.push(costarsVector[n]);
+				}
 				}
 			}
 		}
@@ -145,8 +193,17 @@ ActorNode* ActorGraph::findPath(string actor1, string actor2, vector<ActorNode*>
 }
 
 string ActorGraph::printPath(ActorNode* secondActor, string actor1) 
-{
-	return "(" + actor1 + ")" + secondActor->path;
+{		
+	string returnPath = actor1;
+
+	for(int i = 0; i < secondActor->actorPath.size(); i++)
+	{
+		returnPath.append(secondActor->actorPath[i]->path);
+	}
+
+	returnPath.append(secondActor->path);	
+	
+	return returnPath;
 
 }
 

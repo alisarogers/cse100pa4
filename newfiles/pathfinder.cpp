@@ -89,6 +89,7 @@ int main (int argc, char** argv)
 	ActorNode* actor2Node;
 	ActorNode* actor1Node;
 	string print;
+	toWrite << "(actor)--[movie#@year]-->(actor)--..." << endl;	
 	for(int i = 0; i < actor1s.size(); i++) 
 	{
 		actor2Node = graph->findPath(actor1s[i], actor2s[i], graph->actorNodes);

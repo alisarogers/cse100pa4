@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 #include "MovieNode.h"
+#include <queue>
 using namespace std;
 
 
@@ -21,6 +22,9 @@ public:
     MovieNode* movieBefore;
     MovieNode* movieAfter;
     vector<string> starredIn;
+
+    vector<ActorNode*> actorPath;
+
 
 	string path;
 
