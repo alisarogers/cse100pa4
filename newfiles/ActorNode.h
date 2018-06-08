@@ -22,7 +22,7 @@ public:
     MovieNode* movieBefore;
     MovieNode* movieAfter;
     vector<string> starredIn;
-
+    vector<string> weightedStarredIn;
     vector<ActorNode*> actorPath;
 
 	int weight;

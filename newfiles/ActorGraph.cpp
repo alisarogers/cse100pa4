@@ -242,29 +242,29 @@ ActorNode* ActorGraph::findWeightedPath(string actor1, string actor2, vector<Act
 		else
 		{
 			/* iterate through the current Actor's movies and check to see if actor2 is in any of them*/
-			for(int m = 0; m < currActor->starredIn.size(); m++) 
+			for(int m = 0; m < currActor->weightedStarredIn.size(); m++) 
 			{	
 
 				/* if we've already visited this movie */
 				if(!visitedMovies.empty()) {
-					if(find(visitedMovies.begin(), visitedMovies.end(), currActor->starredIn[m]) != visitedMovies.end()) 
+					if(find(visitedMovies.begin(), visitedMovies.end(), currActor->weightedStarredIn[m]) != visitedMovies.end()) 
 					{ continue; }
 				}
 
 				/* uses the map to get the actors who starred in the movie */
-				costarsVector = map[currActor->starredIn[m]];
+				costarsVector = map[currActor->weightedStarredIn[m]];
 
 				/* add current move to the visited list so we don't look there again */
-				visitedMovies.push_back(currActor->starredIn[m]);
+				visitedMovies.push_back(currActor->weightedStarredIn[m]);
 
 				/* if we found the actor we're looking for in this movie's stars */
 				if(find(costarsVector.begin(), costarsVector.end(), actor2Node) != costarsVector.end())
 				{
 					actor2Node = *(find(costarsVector.begin(), costarsVector.end(), actor2Node));
-					actor2Node->path = "--[" + currActor->starredIn[m] + "]-->(" + actor2 + ")";
+					actor2Node->path = "--[" + currActor->weightedStarredIn[m] + "]-->(" + actor2 + ")";
 					actor2Node->actorPath.push_back(currActor);
 					
-					string movieString = currActor->starredIn[m];
+					string movieString = currActor->weightedStarredIn[m];
 					int movieYear = stoi(movieString.substr((movieString.length() - 4), movieString.length()));
 					actor2Node->weight = 1 + 2015 - movieYear;  
 					return actor2Node;
@@ -282,9 +282,9 @@ ActorNode* ActorGraph::findWeightedPath(string actor1, string actor2, vector<Act
 					/* make sure we aren't pushing someone onto their own path */
 					if(costarsVector[n] != currActor) {
 						costarsVector[n]->actorPath.push_back(currActor);
-						costarsVector[n]->path = "--[" + currActor->starredIn[m] + "]-->(" + costarsVector[n]->name + ")";
+						costarsVector[n]->path = "--[" + currActor->weightedStarredIn[m] + "]-->(" + costarsVector[n]->name + ")";
 					}
-					string movieString = currActor->starredIn[m];
+					string movieString = currActor->weightedStarredIn[m];
 					int movieYear = stoi(movieString.substr((movieString.length() - 4), movieString.length()));
 					costarsVector[n]->weight = 1 + 2015 - movieYear;  
 					visitedActors.push_back(costarsVector[n]->name);
@@ -366,7 +366,7 @@ void ActorGraph::populateNodes(vector<string> actors, vector<string> movies, vec
 		}
 		for (int k = 0; k < weightedMovies.size(); k++)
 		{
-			condensedActors[i]->starredIn[k] = weightedMovies.top();
+			condensedActors[i]->weightedStarredIn.push_back(weightedMovies.top());
 			weightedMovies.pop();
 		}
 	}
