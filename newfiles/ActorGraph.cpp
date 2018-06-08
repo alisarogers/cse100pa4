@@ -231,7 +231,7 @@ ActorNode* ActorGraph::findWeightedPath(string actor1, string actor2, vector<Act
 	while(!weightedQueue.empty())
 	{
 		currActor = weightedQueue.top();		
-		actorQueue.pop();
+		weightedQueue.pop();
 
 		/* if we found the one we're looking for*/
 		if(currActor->name == actor2) {
