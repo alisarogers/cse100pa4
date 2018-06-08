@@ -159,6 +159,11 @@ ActorNode* ActorGraph::findPath(string actor1, string actor2, vector<ActorNode*>
 
 				/* add current move to the visited list so we don't look there again */
 				visitedMovies.push_back(currActor->starredIn[m]);
+				
+				//double check our current actor is actually in this movie??
+				if(find(costarsVector.begin(), costarsVector.end(), currActor) == costarsVector.end()) {
+					continue;
+				}
 
 				/* if we found the actor we're looking for in this movie's stars */
 				if(find(costarsVector.begin(), costarsVector.end(), actor2Node) != costarsVector.end())
