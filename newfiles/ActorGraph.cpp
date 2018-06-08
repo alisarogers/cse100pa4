@@ -196,7 +196,7 @@ ActorNode* ActorGraph::findPath(string actor1, string actor2, vector<ActorNode*>
 ActorNode* ActorGraph::findWeightedPath(string actor1, string actor2, vector<ActorNode*> actorVector)
 {
 	queue<ActorNode*> actorQueue;
-	priority_queue <MovieNode, vector<MovieNode>, Comparator> weightedQueue;
+	priority_queue <ActorNode*, vector<ActorNode*>, actorComparator> weightedQueue;
 	ActorNode* actor1Node;
 	ActorNode* actor2Node;
 
@@ -219,7 +219,7 @@ ActorNode* ActorGraph::findWeightedPath(string actor1, string actor2, vector<Act
 		}
 	}
 
-	actorQueue.push(actor1Node);
+	weightedQueue.push(actor1Node);
 	ActorNode* currActor;
 //	vector<MovieNode*> movieVector;
 	vector<ActorNode*> costarsVector;
@@ -228,9 +228,9 @@ ActorNode* ActorGraph::findWeightedPath(string actor1, string actor2, vector<Act
 	vector<string> visitedActors;
 
 	visitedActors.push_back(actor1Node->name);
-	while(!actorQueue.empty())
+	while(!weightedQueue.empty())
 	{
-		currActor = actorQueue.front();		
+		currActor = weightedQueue.top();		
 		actorQueue.pop();
 
 		/* if we found the one we're looking for*/
@@ -278,8 +278,11 @@ ActorNode* ActorGraph::findWeightedPath(string actor1, string actor2, vector<Act
 						costarsVector[n]->actorPath.push_back(currActor);
 						costarsVector[n]->path = "--[" + currActor->starredIn[m] + "]-->(" + costarsVector[n]->name + ")";
 					}
+					string movieString = currActor->starredIn[m];
+					int movieYear = stoi(movieString.substr((movieString.length() - 4), movieString.length()));
+					costarsVector[n]->weight = 1 + 2015 - movieYear;  
 					visitedActors.push_back(costarsVector[n]->name);
-					actorQueue.push(costarsVector[n]);
+					weightedQueue.push(costarsVector[n]);
 				}
 				}
 			}

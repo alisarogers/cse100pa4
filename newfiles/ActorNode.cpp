@@ -39,13 +39,6 @@ using namespace std;
 		return this->starredIn;
 	}
 
-class actorComparator {
-public:
-	bool operator() (ActorNode &a, ActorNode &b)
-	{
-		return a.weight < b.weight;
-	}
-};
 
 
-#endif //ACTORNODE_H
+#endif //ACTORNODE_CPP

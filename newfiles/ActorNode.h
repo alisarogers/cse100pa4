@@ -34,4 +34,11 @@ public:
     void addToMovies (string addMovie);
     vector<string> getStarredIn();
 };
+
+class actorComparator {
+public:
+	bool operator() (ActorNode* a, ActorNode* b) {
+		return a->weight < b->weight;
+	}
+};
 #endif //ACTORNODE_H
