@@ -106,7 +106,9 @@ ActorNode* ActorGraph::findPath(string actor1, string actor2, vector<ActorNode*>
 
 	for(int i = 0; i < actorVector.size(); i++)
 	{
+		vector<ActorNode*> emptyVector;
 		actorVector[i]->path = "";
+		actorVector[i]->actorPath = emptyVector;
 	}
 	
 
@@ -126,7 +128,6 @@ ActorNode* ActorGraph::findPath(string actor1, string actor2, vector<ActorNode*>
 
 	actorQueue.push(actor1Node);
 	ActorNode* currActor;
-//	vector<MovieNode*> movieVector;
 	vector<ActorNode*> costarsVector;
 	string tempStr;
 	vector<string> visitedMovies;
@@ -202,14 +203,15 @@ ActorNode* ActorGraph::findPath(string actor1, string actor2, vector<ActorNode*>
 
 ActorNode* ActorGraph::findWeightedPath(string actor1, string actor2, vector<ActorNode*> actorVector)
 {
-	queue<ActorNode*> actorQueue;
 	priority_queue <ActorNode*, vector<ActorNode*>, actorComparator> weightedQueue;
 	ActorNode* actor1Node;
 	ActorNode* actor2Node;
 
 	for(int i = 0; i < actorVector.size(); i++)
 	{
+		vector<ActorNode*> emptyVector;
 		actorVector[i]->path = "";
+		actorVector[i]->actorPath = emptyVector;
 	}
 	
 	/* find actor 1 and actor 2 nodes */
@@ -262,6 +264,10 @@ ActorNode* ActorGraph::findWeightedPath(string actor1, string actor2, vector<Act
 				/* add current move to the visited list so we don't look there again */
 				visitedMovies.push_back(currActor->weightedStarredIn[m]);
 
+				//double check our current actor is actually in this movie??
+				if(find(costarsVector.begin(), costarsVector.end(), currActor) == costarsVector.end()) {
+					continue;
+				}
 				/* if we found the actor we're looking for in this movie's stars */
 /*				if(find(costarsVector.begin(), costarsVector.end(), actor2Node) != costarsVector.end())
 				{
@@ -284,17 +290,19 @@ ActorNode* ActorGraph::findWeightedPath(string actor1, string actor2, vector<Act
 						if (find(visitedActors.begin(), visitedActors.end(), costarsVector[n]->name) != visitedActors.end())
 						{ continue; } 
 					}
+	queue<ActorNode*> actorQueue;
 */
 					/* make sure we aren't pushing someone onto their own path */
 					if(costarsVector[n] != currActor) {
 						costarsVector[n]->actorPath.push_back(currActor);
 						costarsVector[n]->path = "--[" + currActor->weightedStarredIn[m] + "]-->(" + costarsVector[n]->name + ")";
-					}
+					
 					string movieString = currActor->weightedStarredIn[m];
 					int movieYear = stoi(movieString.substr((movieString.length() - 4), movieString.length()));
 					costarsVector[n]->weight = 1 + 2015 - movieYear;  
 					visitedActors.push_back(costarsVector[n]->name);
 					weightedQueue.push(costarsVector[n]);
+					}
 				}
 			//`	}
 			}
