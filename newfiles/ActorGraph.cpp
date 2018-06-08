@@ -212,7 +212,7 @@ ActorNode* ActorGraph::findWeightedPath(string actor1, string actor2, vector<Act
 		vector<ActorNode*> emptyVector;
 		actorVector[i]->path = "";
 		actorVector[i]->actorPath = emptyVector;
-		actorVector[i]->weight = 0; 
+		actorVector[i]->weight = -1; 
 		actorVector[i]->pathWeight = 0;
 	}
 	
@@ -249,10 +249,10 @@ ActorNode* ActorGraph::findWeightedPath(string actor1, string actor2, vector<Act
 		} 
 		else
 		{
+			vector<ActorNode*> visitedThisLoop;
 			/* iterate through the current Actor's movies and check to see if actor2 is in any of them*/
 			for(int m = 0; m < currActor->weightedStarredIn.size(); m++) 
 			{	
-
 				/* if we've already visited this movie */
 				if(!visitedMovies.empty()) {
 					if(find(visitedMovies.begin(), visitedMovies.end(), currActor->weightedStarredIn[m]) != visitedMovies.end()) 
@@ -274,26 +274,32 @@ ActorNode* ActorGraph::findWeightedPath(string actor1, string actor2, vector<Act
 				for (int n = 0; n < costarsVector.size(); n++)
 				{
 					/* if we already visited this actor, we skip this iteration */
-/*					if(!visitedActors.empty()) {
+			/*		if(!visitedActors.empty()) {
 						if (find(visitedActors.begin(), visitedActors.end(), costarsVector[n]->name) != visitedActors.end())
 						{ continue; } 
 					}
-*/	
-
-					/* make sure we aren't pushing someone onto their own path */
+		*/
+		/*			if(!visitedThisLoop.empty()){
+					if(find(visitedThisLoop.begin(), visitedThisLoop.begin(), costarsVector[n]) != visitedThisLoop.end())
+					{ continue; }
+					}
+					visitedThisLoop.push_back(costarsVector[n]);
+		*/			/* make sure we aren't pushing someone onto their own path */
 					if(costarsVector[n] != currActor) {
-						costarsVector[n]->actorPath.push_back(currActor);
-						costarsVector[n]->path = "--[" + currActor->weightedStarredIn[m] + "]-->(" + costarsVector[n]->name + ")";
-					
 					string movieString = currActor->weightedStarredIn[m];
 					int movieYear = stoi(movieString.substr((movieString.length() - 4), movieString.length()));
-					costarsVector[n]->weight = 1 + 2015 - movieYear;  
+					int newWeight = 1 + 2015 - movieYear;
+					if ((costarsVector[n]->weight > newWeight) || (costarsVector[n]->weight == -1)) {
+						costarsVector[n]->weight = 1 + 2015 - movieYear;
+						costarsVector[n]->path = "--[" + currActor->weightedStarredIn[m] + "]-->(" + costarsVector[n]->name + ")";
+					}  
+						costarsVector[n]->actorPath.push_back(currActor);
+					
 					costarsVector[n]->pathWeight += currActor->pathWeight;
 					visitedActors.push_back(costarsVector[n]->name);
 					weightedQueue.push(costarsVector[n]);
 					}
 				}
-			//`	}
 			}
 		}
 	}
