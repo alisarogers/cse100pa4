@@ -28,6 +28,8 @@ public:
     vector<ActorNode*> actorNodes;
     vector<MovieNode*> movieNodes;
     
+    int connectActors(string actor1, string actor2, vector<ActorNode*> actorVector);
+    int edgeWeight(ActorNode* actor1, ActorNode* actor2);
     vector<string> getActors();
     vector<string> getMovies();
     vector<int> getYears();

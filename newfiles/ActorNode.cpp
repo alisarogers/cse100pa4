@@ -17,6 +17,7 @@ using namespace std;
 	{
 		this->name = actor;
 		this->weight = 0;
+		this->band = 0;
 	}
 
 	void ActorNode::setMovieBefore(MovieNode* before)

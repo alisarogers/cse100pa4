@@ -19,11 +19,11 @@ all: pathfinder actorconnections
 
 # include what ever source code *.h files pathfinder relies on (these are merely the ones that were used in the solution)
 
-pathfinder: ActorGraph.o MovieNode.o ActorNode.o
+pathfinder: ActorGraph.o MovieNode.o ActorNode.o 
 
 # for final submission
 
-actorconnections: ActorGraph.o
+actorconnections: ActorGraph.o MovieNode.o ActorNode.o 
 
 # include what ever source code *.h files ActorGraph relies on (these are merely the ones that were used in the solution)
 
@@ -34,6 +34,7 @@ ActorGraph.o: ActorGraph.h
 MovieNode.o: MovieNode.h
 
 ActorNode.o: ActorNode.h
+
 
 
 clean:

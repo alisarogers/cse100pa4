@@ -24,7 +24,7 @@ public:
     vector<string> starredIn;
     vector<string> weightedStarredIn;
     vector<ActorNode*> actorPath;
-
+	int band;
 	int weight;
 	int pathWeight;
 	string path;
@@ -55,6 +55,12 @@ public:
 	
 	return weightA < weightB;
 
+	}
+};
+class bandComparator {
+public:
+	bool operator() (ActorNode* a, ActorNode*b) {
+		return a->band < b->band;
 	}
 };
 #endif //ACTORNODE_H

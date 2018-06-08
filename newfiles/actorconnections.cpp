@@ -39,7 +39,7 @@ int main (int argc, char** argv)
 	vector<string> actor2s;
 
 	/* read in the pairs */
-	ifstream infile(argv[3]);
+	ifstream infile(argv[2]);
 	bool have_header = false;	
 	while (infile) {
 		
@@ -85,21 +85,18 @@ int main (int argc, char** argv)
 
 	//open out text file
 	ofstream toWrite;
-	toWrite.open(argv[4]);
+	toWrite.open(argv[3]);
 
 	ActorNode* actor2Node;
 	ActorNode* actor1Node;
+	int bandwidth;
 	string print;
-	toWrite << "(actor)--[movie#@year]-->(actor)--..." << endl;	
+	toWrite << "Actor1	Actor2	Year" << endl;	
 	for(int i = 0; i < actor1s.size(); i++) 
 	{
-		if(*argv[2] == 'u')
-		{
-			actor2Node = graph->findPath(actor1s[i], actor2s[i], graph->actorNodes); 
-		} else {
-			actor2Node = graph->findWeightedPath(actor1s[i], actor2s[i], graph->actorNodes); 
-		}
-		print = graph->printPath(actor2Node, actor1s[i]);
+	
+		bandwidth = graph->connectActors(actor1s[i], actor2s[i], graph->actorNodes); 
+		print = actor1s[i] + "	" + actor2s[i] + "	" + to_string(1 + 2015 - bandwidth);
 		toWrite << print << endl;
 	}	
 	toWrite.close();
