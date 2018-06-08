@@ -197,6 +197,8 @@ ActorNode* ActorGraph::findPath(string actor1, string actor2, vector<ActorNode*>
 			}
 		}
 	}
+
+
 	
 }
 
@@ -206,6 +208,7 @@ ActorNode* ActorGraph::findWeightedPath(string actor1, string actor2, vector<Act
 	priority_queue <ActorNode*, vector<ActorNode*>, actorComparator> weightedQueue;
 	ActorNode* actor1Node;
 	ActorNode* actor2Node;
+	vector<ActorNode*> orderOfQueue;
 
 	for(int i = 0; i < actorVector.size(); i++)
 	{
@@ -243,6 +246,7 @@ ActorNode* ActorGraph::findWeightedPath(string actor1, string actor2, vector<Act
 		currActor = weightedQueue.top();		
 		weightedQueue.pop();
 
+
 		/* if we found the one we're looking for*/
 		if(currActor->name == actor2) {
 			return currActor;
@@ -279,30 +283,36 @@ ActorNode* ActorGraph::findWeightedPath(string actor1, string actor2, vector<Act
 						{ continue; } 
 					}
 		*/
-		/*			if(!visitedThisLoop.empty()){
-					if(find(visitedThisLoop.begin(), visitedThisLoop.begin(), costarsVector[n]) != visitedThisLoop.end())
-					{ continue; }
-					}
-					visitedThisLoop.push_back(costarsVector[n]);
-		*/			/* make sure we aren't pushing someone onto their own path */
+					/* make sure we aren't pushing someone onto their own path */
 					if(costarsVector[n] != currActor) {
-					string movieString = currActor->weightedStarredIn[m];
-					int movieYear = stoi(movieString.substr((movieString.length() - 4), movieString.length()));
-					int newWeight = 1 + 2015 - movieYear;
-					if ((costarsVector[n]->weight > newWeight) || (costarsVector[n]->weight == -1)) {
-						costarsVector[n]->weight = 1 + 2015 - movieYear;
-						costarsVector[n]->path = "--[" + currActor->weightedStarredIn[m] + "]-->(" + costarsVector[n]->name + ")";
-					}  
+						string movieString = currActor->weightedStarredIn[m];
+						int movieYear = stoi(movieString.substr((movieString.length() - 4), movieString.length()));
+						int newWeight = 1 + 2015 - movieYear;
+						if ((costarsVector[n]->weight > newWeight) || (costarsVector[n]->weight == -1)) {
+							costarsVector[n]->weight = 1 + 2015 - movieYear;
+							costarsVector[n]->path = "--[" + currActor->weightedStarredIn[m] + "]-->(" + costarsVector[n]->name + ")";
+						} 
+				
+						costarsVector[n]->actorPath = currActor->actorPath;
 						costarsVector[n]->actorPath.push_back(currActor);
+						
+						costarsVector[n]->pathWeight = costarsVector[n]->weight;
+						costarsVector[n]->pathWeight += currActor->pathWeight;
+						
+						if (find(visitedActors.begin(), visitedActors.end(), costarsVector[n]->name) == visitedActors.end())
+						{ weightedQueue.push(costarsVector[n]); 
+
+
+						orderOfQueue.push_back(costarsVector[n]);
+						}
 					
-					costarsVector[n]->pathWeight += currActor->pathWeight;
-					visitedActors.push_back(costarsVector[n]->name);
-					weightedQueue.push(costarsVector[n]);
+						visitedActors.push_back(costarsVector[n]->name);
 					}
 				}
 			}
 		}
 	}
+int QueueSize = orderOfQueue.size();
 	
 }
 
