@@ -258,7 +258,7 @@ ActorNode* ActorGraph::findWeightedPath(string actor1, string actor2, vector<Act
 				visitedMovies.push_back(currActor->weightedStarredIn[m]);
 
 				/* if we found the actor we're looking for in this movie's stars */
-				if(find(costarsVector.begin(), costarsVector.end(), actor2Node) != costarsVector.end())
+/*				if(find(costarsVector.begin(), costarsVector.end(), actor2Node) != costarsVector.end())
 				{
 					actor2Node = *(find(costarsVector.begin(), costarsVector.end(), actor2Node));
 					actor2Node->path = "--[" + currActor->weightedStarredIn[m] + "]-->(" + actor2 + ")";
@@ -270,15 +270,16 @@ ActorNode* ActorGraph::findWeightedPath(string actor1, string actor2, vector<Act
 					return actor2Node;
 				}
 				else {
+*/
 				/* add the costars to the queue so we can visit their costars*/
 				for (int n = 0; n < costarsVector.size(); n++)
 				{
 					/* if we already visited this actor, we skip this iteration */
-					if(!visitedActors.empty()) {
+/*					if(!visitedActors.empty()) {
 						if (find(visitedActors.begin(), visitedActors.end(), costarsVector[n]->name) != visitedActors.end())
 						{ continue; } 
 					}
-
+*/
 					/* make sure we aren't pushing someone onto their own path */
 					if(costarsVector[n] != currActor) {
 						costarsVector[n]->actorPath.push_back(currActor);
@@ -290,7 +291,7 @@ ActorNode* ActorGraph::findWeightedPath(string actor1, string actor2, vector<Act
 					visitedActors.push_back(costarsVector[n]->name);
 					weightedQueue.push(costarsVector[n]);
 				}
-				}
+			//`	}
 			}
 		}
 	}
@@ -364,7 +365,7 @@ void ActorGraph::populateNodes(vector<string> actors, vector<string> movies, vec
 		{
 			weightedMovies.push(condensedActors[i]->starredIn[j]);
 		}
-		for (int k = 0; k < weightedMovies.size(); k++)
+		for (int k = 0; k < condensedActors[i]->starredIn.size(); k++)
 		{
 			condensedActors[i]->weightedStarredIn.push_back(weightedMovies.top());
 			weightedMovies.pop();
