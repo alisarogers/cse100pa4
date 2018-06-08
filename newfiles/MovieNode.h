@@ -21,6 +21,9 @@ public:
 	ActorNode* actorBefore;
 	ActorNode* actorAfter;
 	vector<ActorNode*> castMembers;
+	
+	int weight;
+	
 
 	MovieNode();
 	MovieNode(string movie, int yr);
@@ -28,6 +31,14 @@ public:
 	void setActorAfter(ActorNode* after);
 	void addToCast (ActorNode* addActor);
 	vector<ActorNode*> getCast();
+};
+
+class Comparator {
+public:
+	bool operator() (MovieNode &a, MovieNode &b)
+	{
+		return a.weight < b.weight;
+	}	
 };
 
 #endif //MOVIENODE_H

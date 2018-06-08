@@ -16,6 +16,7 @@ using namespace std;
 	ActorNode::ActorNode(string actor)
 	{
 		this->name = actor;
+		this->weight = 0;
 	}
 
 	void ActorNode::setMovieBefore(MovieNode* before)
@@ -37,5 +38,14 @@ using namespace std;
 	{
 		return this->starredIn;
 	}
+
+class actorComparator {
+public:
+	bool operator() (ActorNode &a, ActorNode &b)
+	{
+		return a.weight < b.weight;
+	}
+};
+
 
 #endif //ACTORNODE_H

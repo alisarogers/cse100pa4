@@ -19,6 +19,7 @@ using namespace std;
 		name = movie;
 		year = yr;
 		movieAndYear = movie + "#@" + to_string(yr);
+		weight = 1 + 2015 - year;
 		// do we need to initialize actorBefore/actorAfter/cast?
 	}	
 	void MovieNode::setActorBefore(ActorNode* before){

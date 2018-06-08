@@ -92,7 +92,12 @@ int main (int argc, char** argv)
 	toWrite << "(actor)--[movie#@year]-->(actor)--..." << endl;	
 	for(int i = 0; i < actor1s.size(); i++) 
 	{
-		actor2Node = graph->findPath(actor1s[i], actor2s[i], graph->actorNodes);
+		if(*argv[3] == 'u')
+		{
+			actor2Node = graph->findPath(actor1s[i], actor2s[i], graph->actorNodes); 
+		} else {
+			actor2Node = graph->findWeightedPath(actor1s[i], actor2s[i], graph->actorNodes); 
+		}
 		print = graph->printPath(actor2Node, actor1s[i]);
 		toWrite << print << endl;
 	}	

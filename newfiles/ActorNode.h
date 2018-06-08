@@ -25,7 +25,7 @@ public:
 
     vector<ActorNode*> actorPath;
 
-
+	int weight;
 	string path;
 
     ActorNode(string actor);
