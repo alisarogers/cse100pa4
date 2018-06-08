@@ -38,7 +38,22 @@ public:
 class actorComparator {
 public:
 	bool operator() (ActorNode* a, ActorNode* b) {
-		return a->weight < b->weight;
+		return a->weight > b->weight;
+	}
+};
+
+class MovieComparator {
+public:
+	bool operator() (string a, string b) {
+	int weightA;
+	int weightB;
+	a = a.substr(a.length()-4, a.length());
+	b = b.substr(b.length()-4, b.length());
+	weightA = stoi(a);
+	weightB = stoi(b);
+	
+	return weightA < weightB;
+
 	}
 };
 #endif //ACTORNODE_H

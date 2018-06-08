@@ -92,7 +92,7 @@ int main (int argc, char** argv)
 	toWrite << "(actor)--[movie#@year]-->(actor)--..." << endl;	
 	for(int i = 0; i < actor1s.size(); i++) 
 	{
-		if(*argv[3] == 'u')
+		if(*argv[2] == 'u')
 		{
 			actor2Node = graph->findPath(actor1s[i], actor2s[i], graph->actorNodes); 
 		} else {

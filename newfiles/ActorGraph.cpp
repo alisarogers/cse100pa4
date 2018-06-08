@@ -109,6 +109,7 @@ ActorNode* ActorGraph::findPath(string actor1, string actor2, vector<ActorNode*>
 		actorVector[i]->path = "";
 	}
 	
+
 	/* find actor 1 and actor 2 nodes */
 	for(int i = 0; i < actorVector.size(); i++) 
 	{
@@ -181,9 +182,10 @@ ActorNode* ActorGraph::findPath(string actor1, string actor2, vector<ActorNode*>
 					if(costarsVector[n] != currActor) {
 						costarsVector[n]->actorPath.push_back(currActor);
 						costarsVector[n]->path = "--[" + currActor->starredIn[m] + "]-->(" + costarsVector[n]->name + ")";
+					
+						visitedActors.push_back(costarsVector[n]->name);
+						actorQueue.push(costarsVector[n]);
 					}
-					visitedActors.push_back(costarsVector[n]->name);
-					actorQueue.push(costarsVector[n]);
 				}
 				}
 			}
@@ -261,6 +263,10 @@ ActorNode* ActorGraph::findWeightedPath(string actor1, string actor2, vector<Act
 					actor2Node = *(find(costarsVector.begin(), costarsVector.end(), actor2Node));
 					actor2Node->path = "--[" + currActor->starredIn[m] + "]-->(" + actor2 + ")";
 					actor2Node->actorPath.push_back(currActor);
+					
+					string movieString = currActor->starredIn[m];
+					int movieYear = stoi(movieString.substr((movieString.length() - 4), movieString.length()));
+					actor2Node->weight = 1 + 2015 - movieYear;  
 					return actor2Node;
 				}
 				else {
@@ -348,7 +354,22 @@ void ActorGraph::populateNodes(vector<string> actors, vector<string> movies, vec
 		}
 	}
 
+
 	
+	for (int i = 0; i < condensedActors.size(); i++)
+	{
+		
+		priority_queue<string, vector<string>, MovieComparator> weightedMovies;
+		for (int j = 0; j < condensedActors[i]->starredIn.size(); j++) 
+		{
+			weightedMovies.push(condensedActors[i]->starredIn[j]);
+		}
+		for (int k = 0; k < weightedMovies.size(); k++)
+		{
+			condensedActors[i]->starredIn[k] = weightedMovies.top();
+			weightedMovies.pop();
+		}
+	}
 
 
 	this->actorNodes = condensedActors;
