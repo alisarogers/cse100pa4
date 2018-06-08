@@ -397,6 +397,11 @@ void ActorGraph::populateNodes(vector<string> actors, vector<string> movies, vec
 int ActorGraph::edgeWeight(ActorNode* actor1, ActorNode* actor2) {
 	
 	string foundMovie;
+
+	/* if they're the same person */
+	if(actor1 == actor2)
+	{ return 0; }
+
 	for(int i = 0; i < actor1->weightedStarredIn.size(); i++)
 	{
 		/* find the movie that immediately connects them with least weight*/
@@ -411,6 +416,24 @@ int ActorGraph::edgeWeight(ActorNode* actor1, ActorNode* actor2) {
 	return 1 + 2015 - toReturn;
 }
 
+string ActorGraph::edgeMovie(ActorNode* actor1, ActorNode* actor2) {
+	
+	string foundMovie;
+
+	/* if they're the same person */
+	if(actor1 == actor2)
+	{ return 0; }
+
+	for(int i = 0; i < actor1->weightedStarredIn.size(); i++)
+	{
+		/* find the movie that immediately connects them with least weight*/
+		if(find(actor2->weightedStarredIn.begin(), actor2->weightedStarredIn.end(), actor1->weightedStarredIn[i]) != actor2->weightedStarredIn.end()) {
+			foundMovie = actor1->weightedStarredIn[i];
+			break;
+		}
+	}
+	return foundMovie;
+}
 
 int ActorGraph::connectActors(string actor1, string actor2, vector<ActorNode*> actorVector)
 {
@@ -472,6 +495,95 @@ int ActorGraph::connectActors(string actor1, string actor2, vector<ActorNode*> a
 				w->actorPath = v->actorPath;
 				w->actorPath.push_back(v);
 				w->band = c;
+				/* if we haven't already visited this actor, enqueue */
+				if (find(visitedActors.begin(), visitedActors.end(), w) == visitedActors.end()) {
+					visitedActors.push_back(w);
+					bandQueue.push(w);
+				} 
+			}
+		}
+/* initialize band field to "0" 
+for each of v neihgbors w:
+	c = min(v.band, edgeWeight(v, w))
+	if c is "more" than w.band"
+		w.prev = v
+		w.band = c
+		enqueue {w, c} into the PQ
+*/
+	}
+
+
+}
+
+ActorNode* ActorGraph::findWeightedPath2(string actor1, string actor2, vector<ActorNode*> actorVector)
+{
+	priority_queue<ActorNode*, vector<ActorNode*>, bandComparator> bandQueue;
+	ActorNode* actor1Node;
+	ActorNode* actor2Node;
+
+	/* initialize all weights to 0, plus find actor1Node*/
+	for (int i = 0; i < actorVector.size(); i ++)
+	{
+		if (actorVector[i]->name == actor1) 
+		{ actor1Node = actorVector[i]; }
+		
+		if (actorVector[i]->name == actor2)
+		{ actor2Node = actorVector[i]; }
+		
+		actorVector[i]->weight = 0;
+	}
+	
+	int c;
+	ActorNode* v;
+	ActorNode* w;
+	vector<ActorNode*> visitedActors;
+	bandQueue.push(actor1Node);
+	actor1Node->weight = 0;
+	while(!bandQueue.empty()) {		
+		
+		/* get first value in the PQ*/
+		v = bandQueue.top();
+		bandQueue.pop();
+
+		/* check if we found it? */
+		if (v == actor2Node)
+		{
+			return v;
+		}
+	
+	
+		/* get a list of all the neighbors*/
+		vector<ActorNode*> cycleActors;
+		string currMovie;
+		vector<ActorNode*> costars;
+		for(int j = 0; j < v->weightedStarredIn.size(); j++)
+		{
+			currMovie = v->weightedStarredIn[j];
+			costars = map[currMovie];
+			for (int k = 0; k < costars.size(); k++)
+			{
+				if(costars[k] != v) {
+					cycleActors.push_back(costars[k]);
+				}
+			}
+		}
+
+		for(int l = 0; l < cycleActors.size(); l++)
+		{
+			w = cycleActors[l];
+			c = v->weight + edgeWeight(v, w);
+			if (c < w->weight || (w->weight == 0))
+			{
+			
+				if(w != actor1Node) {
+					w->path = "--[" + edgeMovie(v, w) + "]-->(" + w->name + ")";
+				}
+				if(find(w->actorPath.begin(), w->actorPath.end(), v) == w->actorPath.end()) {
+					w->actorPath = v->actorPath;
+					w->actorPath.push_back(v);
+				}
+		
+				w->weight = c;
 				/* if we haven't already visited this actor, enqueue */
 				if (find(visitedActors.begin(), visitedActors.end(), w) == visitedActors.end()) {
 					visitedActors.push_back(w);

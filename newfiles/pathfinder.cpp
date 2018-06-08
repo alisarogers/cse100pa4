@@ -97,7 +97,7 @@ int main (int argc, char** argv)
 		{
 			actor2Node = graph->findPath(actor1s[i], actor2s[i], graph->actorNodes); 
 		} else {
-			actor2Node = graph->findWeightedPath(actor1s[i], actor2s[i], graph->actorNodes); 
+			actor2Node = graph->findWeightedPath2(actor1s[i], actor2s[i], graph->actorNodes); 
 		}
 		print = graph->printPath(actor2Node, actor1s[i]);
 		toWrite << print << endl;
