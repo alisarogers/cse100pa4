@@ -26,6 +26,7 @@ public:
     vector<ActorNode*> actorPath;
 
 	int weight;
+	int pathWeight;
 	string path;
 
     ActorNode(string actor);
@@ -38,7 +39,7 @@ public:
 class actorComparator {
 public:
 	bool operator() (ActorNode* a, ActorNode* b) {
-		return a->weight > b->weight;
+		return a->pathWeight > b->pathWeight;
 	}
 };
 
