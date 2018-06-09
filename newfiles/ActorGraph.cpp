@@ -340,11 +340,14 @@ void ActorGraph::populateNodes(vector<string> actors, vector<string> movies, vec
 	bool existsAlready;
 	string movieAndYear;
 	
+	priority_queue<string, vector<string>, MovieComparator> ascendingMovies;
+	
 	for(int i = 0; i < movies.size(); i++) 
 	{
 		vector<ActorNode*> emptyVector;
 		movieAndYear = movies[i] + "#@" + to_string(years[i]);
 		map[movieAndYear] = emptyVector;
+		ascendingMovies.push(movieAndYear);
 	} 
 
 
@@ -390,7 +393,9 @@ void ActorGraph::populateNodes(vector<string> actors, vector<string> movies, vec
 		}
 	}
 
+	
 
+	this->moviesByYear = ascendingMovies;
 	this->actorNodes = condensedActors;
 }
 
@@ -517,7 +522,7 @@ for each of v neihgbors w:
 
 ActorNode* ActorGraph::findWeightedPath2(string actor1, string actor2, vector<ActorNode*> actorVector)
 {
-	priority_queue<ActorNode*, vector<ActorNode*>, bandComparator> bandQueue;
+	priority_queue<ActorNode*, vector<ActorNode*>, actorComparator> bandQueue;
 	ActorNode* actor1Node;
 	ActorNode* actor2Node;
 
@@ -585,10 +590,10 @@ ActorNode* ActorGraph::findWeightedPath2(string actor1, string actor2, vector<Ac
 		
 				w->weight = c;
 				/* if we haven't already visited this actor, enqueue */
-				if (find(visitedActors.begin(), visitedActors.end(), w) == visitedActors.end()) {
-					visitedActors.push_back(w);
+		//		if (find(visitedActors.begin(), visitedActors.end(), w) == visitedActors.end()) {
+		//			visitedActors.push_back(w);
 					bandQueue.push(w);
-				} 
+		//		} 
 			}
 		}
 /* initialize band field to "0" 

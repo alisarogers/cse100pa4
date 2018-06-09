@@ -23,7 +23,7 @@ pathfinder: ActorGraph.o MovieNode.o ActorNode.o
 
 # for final submission
 
-actorconnections: ActorGraph.o MovieNode.o ActorNode.o 
+actorconnections: ActorGraph.o MovieNode.o ActorNode.o UnionFind.o 
 
 # include what ever source code *.h files ActorGraph relies on (these are merely the ones that were used in the solution)
 
@@ -35,7 +35,7 @@ MovieNode.o: MovieNode.h
 
 ActorNode.o: ActorNode.h
 
-
+UnionFind.o: UnionFind.h
 
 clean:
 	rm -f pathfinder *.o core*

@@ -11,14 +11,17 @@
 #include <vector>
 #include "MovieNode.h"
 #include <queue>
+#include "UnionFind.h"
+
 using namespace std;
 
-
+class UnionFind;
 class MovieNode;
 
 class ActorNode {
 public:
     string name;
+    UnionFind* set;
     MovieNode* movieBefore;
     MovieNode* movieAfter;
     vector<string> starredIn;

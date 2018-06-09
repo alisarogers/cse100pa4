@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
+#include "UnionFind.h"
 
 using namespace std;
 
@@ -14,7 +15,7 @@ using namespace std;
 
 class ActorNode;
 class ActorGraph;
-
+class UnionFind;
 int main (int argc, char** argv)
 {
 	//creates new ActorGraph pointer
@@ -75,7 +76,7 @@ int main (int argc, char** argv)
 	}
 
 	if(!infile.eof()) {
-		cerr << "Failed to read " << argv[3] << "!\n";
+		cerr << "Failed to read " << argv[2] << "!\n";
 		
 	}
 	infile.close();
@@ -91,14 +92,25 @@ int main (int argc, char** argv)
 	ActorNode* actor1Node;
 	int bandwidth;
 	string print;
+	string whichMethod = argv[3];
 	toWrite << "Actor1	Actor2	Year" << endl;	
-	for(int i = 0; i < actor1s.size(); i++) 
-	{
+	if(whichMethod == "widestp") {
+		for(int i = 0; i < actor1s.size(); i++) 
+		{
 	
-		bandwidth = graph->connectActors(actor1s[i], actor2s[i], graph->actorNodes); 
-		print = actor1s[i] + "	" + actor2s[i] + "	" + to_string(1 + 2015 - bandwidth);
+			bandwidth = graph->connectActors(actor1s[i], actor2s[i], graph->actorNodes); 
+			print = actor1s[i] + "	" + actor2s[i] + "	" + to_string(1 + 2015 - bandwidth);
+			toWrite << print << endl;
+		}
+	} else {
+		UnionFind * unionFind = new UnionFind();
+		for(int i = 0; i < actor1s.size(); i++) 
+		{
+		bandwidth = unionFind->unionAll(graph->moviesByYear, graph->map, graph->actorNodes, actor1s[i], actor2s[i]);
+		print = actor1s[i] + "	" + actor2s[i] + "	" + to_string(bandwidth);
 		toWrite << print << endl;
-	}	
+		}
+	}
 	toWrite.close();
 
 	/*Because the loadFromFile method updates each of these vectors

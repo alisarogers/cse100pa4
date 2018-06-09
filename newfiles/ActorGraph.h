@@ -14,7 +14,7 @@
 #include <unordered_map>
 #include "MovieNode.h"
 #include "ActorNode.h"
-
+#include <queue>
 using namespace std;
 
 
@@ -27,6 +27,8 @@ public:
     unordered_map<string, vector<ActorNode*>> map;   
     vector<ActorNode*> actorNodes;
     vector<MovieNode*> movieNodes;
+
+    priority_queue<string, vector<string>, MovieComparator> moviesByYear;
     
     int connectActors(string actor1, string actor2, vector<ActorNode*> actorVector);
     int edgeWeight(ActorNode* actor1, ActorNode* actor2);
@@ -34,8 +36,8 @@ public:
     vector<string> getActors();
     vector<string> getMovies();
     vector<int> getYears();
-//  vector<movie_pair> getMoviesWithYears();
-    bool loadFromFile(const char* in_filename, bool use_weighted_edges);
+    
+	bool loadFromFile(const char* in_filename, bool use_weighted_edges);
     ActorNode* findPath(string actor1, string actor2, vector<ActorNode*> actorVector);
     ActorNode* findWeightedPath(string actor1, string actor2, vector<ActorNode*> actorVector);
     ActorNode* findWeightedPath2(string actor1, string actor2, vector<ActorNode*> actorVector);
